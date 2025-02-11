@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     type: {
       type: DataTypes.ENUM,
       values: ['organizador', 'viajente'],
-      defaultValue: 'user'
+      defaultValue: 'viajante'
     },
   }, {
     sequelize,
