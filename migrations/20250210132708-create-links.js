@@ -13,13 +13,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      viagemId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'viagens',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+      },
       titulo: {
         allowNull: false,
         type: Sequelize.STRING
-      },
-      viagemId: {
-        allowNull: false,
-        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

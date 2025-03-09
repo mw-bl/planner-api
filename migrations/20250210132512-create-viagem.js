@@ -17,18 +17,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      dataFinal: {
-        type: Sequelize.DATE
-      },
       confirmada: {
         defaultValue: false,
         type: Sequelize.BOOLEAN
       },
-      confirmacao: {
-        type: Sequelize.STRING
-      },
-      organizador: {
-        type: Sequelize.STRING
+      dataFinal: {
+        type: Sequelize.DATE
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -38,17 +32,13 @@ module.exports = {
           key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onDelete: 'SET NUll',
       },
-      destinoId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Destinos',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+      confirmacao: {
+        type: Sequelize.STRING
+      },
+      organizador: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

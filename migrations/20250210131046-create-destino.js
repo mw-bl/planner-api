@@ -21,6 +21,15 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      viagemId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'viagens',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
