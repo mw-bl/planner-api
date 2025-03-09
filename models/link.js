@@ -2,31 +2,31 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class Atividade extends Model {
+  class Link extends Model {
     static associate(models) {
-      Atividade.belongsTo(models.Viagem, {
+      Link.belongsTo(models.Viagem, {
         foreignKey: "viagemId",
         as: "viagem",
       });
     }
   }
 
-  Atividade.init(
+  Link.init(
     {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      dataAtividade: {
-        type: DataTypes.DATE,
+      url: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       titulo: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      viagemId: {
+      viagem_id: {
         type: DataTypes.INTEGER,
         references: {
           model: "viagens",
@@ -36,10 +36,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Atividades",
-      tableName: "atividades",
+      modelName: "Links",
+      tableName: "links",
     }
   );
 
-  return Atividade;
+  return Link;
 };

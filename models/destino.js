@@ -1,32 +1,48 @@
-'use strict';
-const { Model } = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  const Destino = sequelize.define('Destino', {
-    id: {
+  class Destino extends Model {
+    static associate(models) {
+      Destino.belongsTo(models.Viagens, {
+        foreignKey: "viagemId",
+        as: "viagem",
+      });
+    }
+  }
+  Destino.init(
+    {
+      id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-    },
-    pais: {
+      },
+      pais: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    estado: {
+      },
+      estado: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    cidade: {
+      },
+      cidade: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      viagemId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "viagens",
+          key: "id",
+        },
+      },
     },
-});
+    {
+      sequelize,
+      modelName: "Destinos",
+      tableName: "destinos",
+    }
+  );
 
-Destino.associate = (models) => {
-    Destino.hasMany(models.Viagem, {
-        foreignKey: 'destinoId',
-    });
-};
-
-return Destino;
+  return Destino;
 };
