@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      usuarId: {
+      userId: {
         type: DataTypes.INTEGER,
         references: {
           model: "User",

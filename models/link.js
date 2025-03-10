@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      viagem_id: {
+      viagemId: {
         type: DataTypes.INTEGER,
         references: {
           model: "viagens",
