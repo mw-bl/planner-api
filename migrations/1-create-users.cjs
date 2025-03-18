@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      nome: {
+      name: {
         allowNull: false,
         type: Sequelize.STRING,
       },
@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      tipo: {
+      role: {
         allowNull: false,
         type: Sequelize.ENUM("organizador", "viajante"),
       },
