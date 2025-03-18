@@ -1,13 +1,13 @@
-"use strict";
-const { Model } = require("sequelize");
-const bcrypt = require("bcrypt");
+import { Model } from "sequelize";
+import bcrypt from "bcrypt";
 
-module.exports = (sequelize, DataTypes) => {
+import { DataTypes } from "sequelize";
+
+export default (sequelize) => {
   class User extends Model {
     static associate(models) {
       User.hasMany(models.Viagem, {
         foreignKey: "userId",
-        as: "viagens",
       });
     }
   }
@@ -27,15 +27,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       role: {
-        type: DataTypes.ENUM,
-        values: ["organizador", "viajente"],
-        defaultValue: "viajante",
+        type: DataTypes.ENUM("organizador", "viajante"),
       },
     },
     {
       sequelize,
       modelName: "User",
-      tableName: "Users",
       hooks: {
         beforeCreate: async (user) => {
           if (user.password) {

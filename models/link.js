@@ -1,45 +1,36 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict';
 
-module.exports = (sequelize, DataTypes) => {
-  class Link extends Model {
-    static associate(models) {
-      Link.belongsTo(models.Viagem, {
-        foreignKey: "viagemId",
-        as: "viagem",
-      });
-    }
-  }
+import { DataTypes } from "sequelize";
 
-  Link.init(
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      url: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      titulo: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      viagemId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: "viagens",
-          key: "id",
-        },
+export default (sequelize) => {
+  const Link = sequelize.define("Link", {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    titulo: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    viagemId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "viagens",
+        key: "id",
       },
     },
-    {
-      sequelize,
-      modelName: "Links",
-      tableName: "links",
-    }
-  );
+  });
+
+  Link.associate = (models) => {
+    Link.belongsTo(models.Viagem, {
+      foreignKey: "viagemId"
+    });
+  }
 
   return Link;
 };
