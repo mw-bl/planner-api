@@ -1,13 +1,12 @@
-import express from "express";
-import { signUp, login } from "../controllers/authController.js";
-import {
-  authenticationToken,
-  authorizedRole,
-} from "../middlewares/authMiddleware.js";
+import express from 'express';
+import { signUp, login, listUsers } from '../controllers/authController.js';
+import { authenticateToken, authorizeRole } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.post("/signup", authenticationToken, authorizedRole("viajante"), signUp);
-router.post("/login", login);
+router.post('/signup', signUp);
+router.post('/login', login);
+
+router.get('/users', authenticateToken, authorizeRole('organizador'), listUsers);
 
 export default router;
