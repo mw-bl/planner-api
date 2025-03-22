@@ -22,8 +22,8 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: 'Senha inválida' });
     }
 
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: '1h', 
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '1h', // Token expira em 1 hora
     });
 
     res.status(200).json({ message: 'Login bem-sucedido', token });
@@ -34,19 +34,19 @@ export const login = async (req, res) => {
 };
 
 export const signUp = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password } = req.body;
 
   try {
-    
+   
     const existingUser = await db.User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: 'Usuário já existe' });
     }
 
-    
-    const newUser = await db.User.create({ name, email, password, role });
+   
+    const newUser = await db.User.create({ name, email, password });
 
-    
+   
     const user = newUser.get({ plain: true });
     delete user.password;
 
@@ -54,19 +54,5 @@ export const signUp = async (req, res) => {
   } catch (error) {
     console.error('Erro ao criar usuário:', error);
     res.status(500).json({ message: 'Erro ao criar usuário' });
-  }
-};
-
-export const listUsers = async (req, res) => {
-  try {
-    
-    const users = await db.User.findAll({
-      attributes: { exclude: ['password'] }, 
-    });
-
-    res.status(200).json({ message: 'Lista de usuários recuperada com sucesso', users });
-  } catch (error) {
-    console.error('Erro ao listar usuários:', error);
-    res.status(500).json({ message: 'Erro ao listar usuários' });
   }
 };
