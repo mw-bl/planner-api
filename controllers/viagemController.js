@@ -34,3 +34,36 @@ export const getViagemById = async (req, res) => {
     res.status(500).json({ message: 'Erro ao buscar viagem por ID' });
   }
 };
+
+export const updateViagem = async (req, res) => {
+  const { id } = req.params;
+  const { dataCriacao, dataInicio, dataFinal, confirmada, userId, confirmacao, organizador } = req.body;
+
+  try {
+    const viagem = await db.Viagem.findByPk(id);
+    if (!viagem) return res.status(404).json({ message: 'Viagem não encontrada' });
+    
+    Object.assign(viagem, { dataCriacao, dataInicio, dataFinal, confirmada, userId, confirmacao, organizador });
+    await viagem.save();
+
+    res.status(200).json({ message: 'Viagem atualizada com sucesso', viagem });
+  } catch (error) {
+    console.error('Erro ao atualizar viagem:', error);
+    res.status(500).json({ message: 'Erro ao atualizar viagem' });
+  }
+};
+
+export const deleteViagem = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const viagem = await db.Viagem.findByPk(id);
+    if (!viagem) return res.status(404).json({ message: 'Viagem não encontrada' });
+    
+    await viagem.destroy();
+    res.status(200).json({ message: 'Viagem deletada com sucesso' });
+  } catch (error) {
+    console.error('Erro ao deletar viagem:', error);
+    res.status(500).json({ message: 'Erro ao deletar viagem' });
+  }
+};
