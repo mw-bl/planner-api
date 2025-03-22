@@ -9,6 +9,12 @@ export default (sequelize) => {
       User.hasMany(models.Viagem, {
         foreignKey: "userId",
       });
+      User.belongsToMany(models.Viagem, {
+        through: "UserViagem", // Nome da tabela intermediária
+        foreignKey: "userId",
+        otherKey: "viagemId",
+        as: "viagems", // Alias para acessar as viagens do usuário
+      });
     }
   }
   User.init(
@@ -25,9 +31,6 @@ export default (sequelize) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      role: {
-        type: DataTypes.ENUM("organizador", "viajante"),
       },
     },
     {
