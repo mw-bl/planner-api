@@ -35,16 +35,24 @@ export default (sequelize) => {
     organizador: {
       type: DataTypes.STRING,
     },
+    pais: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    estado: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    cidade: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   });
 
   Viagem.associate = (models) => {
     Viagem.belongsTo(models.User, {
       foreignKey: "userId",
-      as : "user"
-    });
-
-    Viagem.hasOne(models.Destino, {
-      foreignKey: "viagemId"
+      as: "user",
     });
 
     Viagem.hasMany(models.Atividade, {
@@ -52,9 +60,9 @@ export default (sequelize) => {
     });
 
     Viagem.hasMany(models.Link, {
-      foreignKey: "viagemId"
+      foreignKey: "viagemId",
     });
   };
 
-  return Viagem;
+  return Viagem;
 };
