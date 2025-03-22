@@ -61,3 +61,21 @@ export const updateDestino = async (req, res) => {
     res.status(500).json({ message: "Erro ao atualizar destino" });
   }
 };
+
+export const deleteDestino = async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const destino = await db.Destino.findByPk(id);
+      if (!destino) {
+        return res.status(404).json({ message: "Destino não encontrado" });
+      }
+  
+      await destino.destroy();
+      res.status(200).json({ message: "Destino deletado com sucesso" });
+    } catch (error) {
+      console.error("Erro ao deletar destino:", error);
+      res.status(500).json({ message: "Erro ao deletar destino" });
+    }
+  };
+  
