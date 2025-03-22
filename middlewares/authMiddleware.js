@@ -1,4 +1,3 @@
-//middleware/authMiddleware.js
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
@@ -20,13 +19,4 @@ export const authenticateToken = (req, res, next) => {
     req.user = user;
     next();
   });
-};
-
-export const authorizeRole = (role) => {
-  return (req, res, next) => {
-    if (req.user.role !== role) {
-      return res.status(403).json({ message: 'Acesso negado' });
-    }
-    next();
-  };
 };
