@@ -23,7 +23,7 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: '1h', // Token expira em 1 hora
+      expiresIn: '1h', 
     });
 
     res.status(200).json({ message: 'Login bem-sucedido', token });
@@ -34,19 +34,19 @@ export const login = async (req, res) => {
 };
 
 export const signUp = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
-    // Verifica se o usuário já existe
+    
     const existingUser = await db.User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: 'Usuário já existe' });
     }
 
-    // Cria o novo usuário
-    const newUser = await db.User.create({ name, email, password });
+    
+    const newUser = await db.User.create({ name, email, password, role });
 
-    // Retorna o usuário criado (sem a senha)
+    
     const user = newUser.get({ plain: true });
     delete user.password;
 
@@ -59,9 +59,9 @@ export const signUp = async (req, res) => {
 
 export const listUsers = async (req, res) => {
   try {
-    // Busca todos os usuários no banco de dados
+    
     const users = await db.User.findAll({
-      attributes: { exclude: ['password'] }, // Exclui a senha do retorno
+      attributes: { exclude: ['password'] }, 
     });
 
     res.status(200).json({ message: 'Lista de usuários recuperada com sucesso', users });
