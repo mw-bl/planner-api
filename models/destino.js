@@ -1,6 +1,4 @@
-'use strict';
 
-import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
   const Destino = sequelize.define("Destino", {
