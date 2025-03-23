@@ -28,11 +28,7 @@ export default (sequelize) => {
     },
   });
 
-  Destino.associate = function (models) {  
-    Destino.belongsTo(models.Viagem, {
-      foreignKey: "viagemId"
-    });
-  };
+]
   
   return Destino;
 };
