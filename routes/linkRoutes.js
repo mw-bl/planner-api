@@ -9,10 +9,10 @@ import {
 
 const router = express.Router();
 
-// router.post("/link", authenticateToken, authorizeRole('organizador'), createLink);
-// router.get("/links", authenticateToken, getAllLinks);
-// router.get("/link/:id", authenticateToken, getLinkById);
-// router.delete("/link/:id", authenticateToken, authorizeRole('organizador'), deleteLink);
+router.post("/link", authenticateToken, authorizeRole('organizador'), createLink);
+router.get("/links", authenticateToken, getAllLinks);
+router.get("/link/:id", authenticateToken, getLinkById);
+router.delete("/link/:id", authenticateToken, authorizeRole('organizador'), deleteLink);
 
 
 
