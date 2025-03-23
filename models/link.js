@@ -26,11 +26,6 @@ export default (sequelize) => {
     },
   });
 
-  Link.associate = (models) => {
-    Link.belongsTo(models.Viagem, {
-      foreignKey: "viagemId"
-    });
-  }
-
+ 
   return Link;
 };
