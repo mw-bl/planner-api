@@ -22,4 +22,6 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
-}
+  
+    return UserViagem;
+  };
