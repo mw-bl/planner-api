@@ -14,9 +14,6 @@ const router = express.Router();
 // router.get("/link/:id", authenticateToken, getLinkById);
 // router.delete("/link/:id", authenticateToken, authorizeRole('organizador'), deleteLink);
 
-router.post("/link", createLink);
-router.get("/links", getAllLinks);
-router.get("/link/:id", getLinkById);
-router.delete("/link/:id", deleteLink);
+
 
 export default router;
