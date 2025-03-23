@@ -5,7 +5,7 @@ import {
   getLinkById,
   deleteLink
 } from "../controllers/linkController.js";
-import { authenticateToken, authorizeRole } from '../middlewares/authMiddleware.js';
+
 
 const router = express.Router();
 
