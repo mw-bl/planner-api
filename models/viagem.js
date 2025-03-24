@@ -59,7 +59,9 @@ export default (sequelize) => {
       foreignKey: "viagemId",
     });
 
-   
+    Viagem.hasMany(models.Link, {
+      foreignKey: "viagemId",
+    });
   };
 
   return Viagem;
