@@ -2,6 +2,7 @@
 import express from 'express';
 import authRoutes from './routes/authRoutes.js';
 import viagemRoutes from './routes/viagemRoutes.js';
+import userViagemRoutes from './routes/userViagemRoutes.js'
 
 import atividadeRoutes from './routes/atividadeRoutes.js';
 
@@ -20,7 +21,7 @@ app.use(cors({
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/', viagemRoutes);
-
+app.use('/api/', userViagemRoutes);
 app.use('/api/', atividadeRoutes);
 
 

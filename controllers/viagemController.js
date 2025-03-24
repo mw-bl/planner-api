@@ -1,9 +1,10 @@
 import db from '../models/index.js';
 
 export const createViagem = async (req, res) => {
-  const { dataCriacao, dataInicio, dataFinal, confirmada, userId, confirmacao, organizador, pais, estado, cidade, } = req.body;
+  const { dataCriacao, dataInicio, dataFinal, confirmada, confirmacao, organizador, pais, estado, cidade} = req.body;
   
   try {
+    const userId = req.user.id;
     const newViagem = await db.Viagem.create({ dataCriacao, dataInicio, dataFinal, confirmada, userId, confirmacao, organizador, pais, estado, cidade });
     res.status(201).json({ message: 'Viagem criada com sucesso', viagem: newViagem });
   } catch (error) {
