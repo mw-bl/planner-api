@@ -2,9 +2,9 @@
 import express from 'express';
 import authRoutes from './routes/authRoutes.js';
 import viagemRoutes from './routes/viagemRoutes.js';
-import destinoRoutes from './routes/destinoRoutes.js';
+
 import atividadeRoutes from './routes/atividadeRoutes.js';
-import linkRoutes from './routes/linkRoutes.js';
+
 import cors from 'cors';
 
 const app = express();
@@ -20,8 +20,8 @@ app.use(cors({
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/', viagemRoutes);
-app.use('/api/', destinoRoutes);
+
 app.use('/api/', atividadeRoutes);
-app.use('/api/', linkRoutes);
+
 
 export default app;
