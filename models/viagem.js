@@ -20,7 +20,7 @@ export default (sequelize) => {
     },
     confirmada: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: true,
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -28,12 +28,6 @@ export default (sequelize) => {
         model: "user",
         key: "id",
       },
-    },
-    confirmacao: {
-      type: DataTypes.STRING,
-    },
-    organizador: {
-      type: DataTypes.STRING,
     },
     pais: {
       type: DataTypes.STRING,
@@ -52,8 +46,12 @@ export default (sequelize) => {
   Viagem.associate = (models) => {
     Viagem.belongsTo(models.User, {
       foreignKey: "userId",
-      as: "user",
+      as: "organizador",
     });
+
+    Viagem.belongsToMany(models.User, { 
+      as: 'participants', 
+      through: 'ViagemParticipants' });
 
     Viagem.hasMany(models.Atividade, {
       foreignKey: "viagemId",

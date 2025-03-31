@@ -21,7 +21,7 @@ module.exports = {
       },
       confirmada: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false,
+        defaultValue: true,
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -30,13 +30,6 @@ module.exports = {
           key: "id",
         },
       },
-      confirmacao: {
-        type: Sequelize.STRING,
-      },
-      organizador: {
-        type: Sequelize.STRING,
-      },
-      // Adicionando os campos de destino diretamente na tabela Viagem
       pais: {
         type: Sequelize.STRING,
         allowNull: false,
