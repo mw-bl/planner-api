@@ -1,11 +1,17 @@
 import db from '../models/index.js';
 
 export const createViagem = async (req, res) => {
-  const { dataCriacao, dataInicio, dataFinal, confirmada, confirmacao, organizador, pais, estado, cidade} = req.body;
+  const { dataCriacao, dataInicio, dataFinal, confirmada, pais, estado, cidade} = req.body;
   
   try {
+
+    // Verifica se o usuário é um organizador
+    if (req.user.role !== 'organizador') {
+      return res.status(403).json({ message: 'Apenas organizadores podem criar viagens' });
+    }
+
     const userId = req.user.id;
-    const newViagem = await db.Viagem.create({ dataCriacao, dataInicio, dataFinal, confirmada, userId, confirmacao, organizador, pais, estado, cidade });
+    const newViagem = await db.Viagem.create({ dataCriacao, dataInicio, dataFinal, confirmada, userId, pais, estado, cidade });
     res.status(201).json({ message: 'Viagem criada com sucesso', viagem: newViagem });
   } catch (error) {
     console.error('Erro ao criar viagem:', error);
@@ -15,7 +21,29 @@ export const createViagem = async (req, res) => {
 
 export const getAllViagens = async (req, res) => {
   try {
-    const viagens = await db.Viagem.findAll({ include: [{ model: db.User, as: 'user' }] });
+    let viagens;
+
+    if (req.user.role === 'organizador') {
+      // Organizadores podem ver as viagens que organizaram e as que participam
+      viagens = await db.Viagem.findAll({
+        where: { userId: req.user.id },
+        include: [{ model: db.User, as: 'convidados' }],
+      });
+    } else if (req.user.role === 'convidado') {
+      // Convidados só podem ver as viagens em que participam
+      viagens = await db.Viagem.findAll({
+        include: [
+          {
+            model: db.User,
+            as: 'convidados',
+            where: { id: req.user.id },
+          },
+        ],
+      });
+    } else {
+      return res.status(403).json({ message: 'Acesso negado' });
+    }
+
     res.status(200).json({ message: 'Viagens recuperadas com sucesso', viagens });
   } catch (error) {
     console.error('Erro ao listar viagens:', error);
@@ -38,13 +66,13 @@ export const getViagemById = async (req, res) => {
 
 export const updateViagem = async (req, res) => {
   const { id } = req.params;
-  const { dataCriacao, dataInicio, dataFinal, confirmada, userId, confirmacao, organizador } = req.body;
+  const { dataCriacao, dataInicio, dataFinal, confirmada, userId } = req.body;
 
   try {
     const viagem = await db.Viagem.findByPk(id);
     if (!viagem) return res.status(404).json({ message: 'Viagem não encontrada' });
     
-    Object.assign(viagem, { dataCriacao, dataInicio, dataFinal, confirmada, userId, confirmacao, organizador });
+    Object.assign(viagem, { dataCriacao, dataInicio, dataFinal, confirmada, userId });
     await viagem.save();
 
     res.status(200).json({ message: 'Viagem atualizada com sucesso', viagem });
