@@ -6,15 +6,14 @@ import {
   updateAtividade,
   deleteAtividade
 } from "../controllers/atividadeController.js";
-import { authenticateToken } from '../middlewares/authMiddleware.js';
+import { authenticateToken, authorizeRole } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.post("/atividade", authenticateToken, createAtividade);
+router.post("/atividade", authenticateToken, authorizeRole('organizador'), createAtividade);
 router.get("/atividades", authenticateToken, getAllAtividades);
 router.get("/atividade/:id", authenticateToken, getAtividadeById);
-router.put("/atividade/:id", authenticateToken, updateAtividade);
-router.delete("/atividade/:id", authenticateToken, deleteAtividade);
-
+router.put("/atividade/:id", authenticateToken, authorizeRole('organizador'), updateAtividade);
+router.delete("/atividade/:id", authenticateToken, authorizeRole('organizador'), deleteAtividade);
 
 export default router;
