@@ -34,7 +34,7 @@ export const login = async (req, res) => {
 };
 
 export const signUp = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
    
@@ -44,7 +44,7 @@ export const signUp = async (req, res) => {
     }
 
    
-    const newUser = await db.User.create({ name, email, password });
+    const newUser = await db.User.create({ name, email, password, role });
 
    
     const user = newUser.get({ plain: true });
