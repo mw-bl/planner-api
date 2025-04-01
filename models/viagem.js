@@ -51,7 +51,7 @@ export default (sequelize) => {
 
     Viagem.belongsToMany(models.User, { 
       as: 'participants', 
-      through: 'ViagemParticipants' });
+      through: 'UserViagem' });
 
     Viagem.hasMany(models.Atividade, {
       foreignKey: "viagemId",
