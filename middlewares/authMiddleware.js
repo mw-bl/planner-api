@@ -8,14 +8,16 @@ export const authenticateToken = (req, res, next) => {
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
+    console.log('Token não fornecido');
     return res.status(401).json({ message: 'Token não fornecido' });
-  }
+}
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
+jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  if (err) {
+      console.log('Erro ao verificar token:', err);
       return res.status(403).json({ message: 'Token inválido ou expirado' });
-    }
-
+  }
+  console.log('Usuário autenticado no middleware:', user); 
     req.user = user;
     next();
   });
@@ -23,9 +25,11 @@ export const authenticateToken = (req, res, next) => {
 
 export const authorizeRole = (role) => {
   return (req, res, next) => {
-    if (req.user.role !== role) {
-      return res.status(403).json({ message: 'Acesso negado' });
-    }
-    next();
+      console.log('Papel do usuário:', req.user.role);
+      if (req.user.role !== role) {
+          console.log('Acesso negado. Papel necessário:', role);
+          return res.status(403).json({ message: 'Acesso negado' });
+      }
+      next();
   };
 };

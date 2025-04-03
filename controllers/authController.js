@@ -11,20 +11,23 @@ export const login = async (req, res) => {
 
   try {
     const user = await db.User.findOne({ where: { email } });
-
     if (!user) {
       return res.status(404).json({ message: 'Usuário não encontrado' });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Senha inválida' });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '1h', // Token expira em 1 hora
-    });
+    console.log('Papel do usuário no login:', user.role); // Verifique se o papel está correto
+
+    // Gera o token JWT com o papel do usuário
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role }, // Inclua o papel do usuário
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
 
     res.status(200).json({ message: 'Login bem-sucedido', token });
   } catch (error) {

@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { Sequelize } from 'sequelize';
 import process from 'process';
 
+
 // Substitua __filename e __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

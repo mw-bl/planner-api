@@ -25,7 +25,7 @@ export default (sequelize) => {
     userId: {
       type: DataTypes.INTEGER,
       references: {
-        model: "user",
+        model: "User",
         key: "id",
       },
     },
@@ -46,19 +46,15 @@ export default (sequelize) => {
   Viagem.associate = (models) => {
     Viagem.belongsTo(models.User, {
       foreignKey: "userId",
-      as: "organizador",
+      as: "organizador", // Alias para o organizador da viagem
     });
-
-    Viagem.belongsToMany(models.User, { 
-      as: 'participants', 
-      through: 'UserViagem' });
-
-    Viagem.hasMany(models.Atividade, {
+    Viagem.belongsToMany(models.User, {
+      through: "UserViagem",
       foreignKey: "viagemId",
+      otherKey: "userId",
+      as: "convidados", // Alias para os participantes da viagem
     });
-
-    
   };
 
-  return Viagem;
+  return Viagem;
 };

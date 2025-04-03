@@ -24,10 +24,16 @@ export const getAllViagens = async (req, res) => {
     let viagens;
 
     if (req.user.role === 'organizador') {
-      // Organizadores podem ver as viagens que organizaram e as que participam
+      // Organizadores podem ver as viagens que organizaram
       viagens = await db.Viagem.findAll({
         where: { userId: req.user.id },
-        include: [{ model: db.User, as: 'convidados' }],
+        include: [
+          {
+            model: db.User,
+            as: 'convidados', // Alias definido no modelo
+            attributes: ['id', 'name', 'email'], // Campos que você deseja incluir
+          },
+        ],
       });
     } else if (req.user.role === 'convidado') {
       // Convidados só podem ver as viagens em que participam
@@ -35,8 +41,9 @@ export const getAllViagens = async (req, res) => {
         include: [
           {
             model: db.User,
-            as: 'convidados',
+            as: 'convidados', // Alias definido no modelo
             where: { id: req.user.id },
+            attributes: ['id', 'name', 'email'],
           },
         ],
       });
