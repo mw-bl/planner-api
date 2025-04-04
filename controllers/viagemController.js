@@ -1,17 +1,25 @@
 import db from '../models/index.js';
 
 export const createViagem = async (req, res) => {
-  const { dataCriacao, dataInicio, dataFinal, confirmada, pais, estado, cidade} = req.body;
-  
-  try {
+  const { dataCriacao, dataInicio, dataFinal, confirmada, pais, estado, cidade, participantes } = req.body;
+  const userId = req.user.id;
 
-    // Verifica se o usuário é um organizador
+  try {
     if (req.user.role !== 'organizador') {
       return res.status(403).json({ message: 'Apenas organizadores podem criar viagens' });
     }
 
-    const userId = req.user.id;
     const newViagem = await db.Viagem.create({ dataCriacao, dataInicio, dataFinal, confirmada, userId, pais, estado, cidade });
+
+    if (participantes && participantes.length > 0) {
+      const participantesData = participantes.map((p) => ({
+        viagemId: newViagem.id,
+        userId: p.id,
+        confirmada: false,
+      }));
+      await db.UserViagem.bulkCreate(participantesData);
+    }
+
     res.status(201).json({ message: 'Viagem criada com sucesso', viagem: newViagem });
   } catch (error) {
     console.error('Erro ao criar viagem:', error);
@@ -24,25 +32,20 @@ export const getAllViagens = async (req, res) => {
     let viagens;
 
     if (req.user.role === 'organizador') {
-      // Organizadores podem ver as viagens que organizaram e as que estão participando
+      // Organizadores podem ver as viagens que organizaram
       viagens = await db.Viagem.findAll({
-        where: {
-          [db.Sequelize.Op.or]: [
-            { userId: req.user.id }, // Viagens organizadas pelo usuário
-          ],
-        },
+        where: { userId: req.user.id },
         include: [
           {
             model: db.User,
-            as: 'organizador', // Alias definido no modelo
-            attributes: ['id', 'name', 'email'], // Campos do organizador que você deseja retornar
+            as: 'organizador',
+            attributes: ['id', 'name', 'email'],
           },
           {
             model: db.User,
-            as: 'convidados', // Alias definido no modelo
-            where: { id: req.user.id }, // Viagens em que o organizador está participando
+            as: 'convidados',
             attributes: ['id', 'name', 'email'],
-            required: false, // Inclui mesmo que não haja convidados
+            through: { attributes: ['confirmada'] },
           },
         ],
       });
@@ -52,14 +55,15 @@ export const getAllViagens = async (req, res) => {
         include: [
           {
             model: db.User,
-            as: 'organizador', // Alias definido no modelo
-            attributes: ['id', 'name', 'email'], // Campos do organizador que você deseja retornar
+            as: 'organizador',
+            attributes: ['id', 'name', 'email'],
           },
           {
             model: db.User,
-            as: 'convidados', // Alias definido no modelo
+            as: 'convidados',
             where: { id: req.user.id },
             attributes: ['id', 'name', 'email'],
+            through: { attributes: ['confirmada'] },
           },
         ],
       });
@@ -117,5 +121,7 @@ export const deleteViagem = async (req, res) => {
   } catch (error) {
     console.error('Erro ao deletar viagem:', error);
     res.status(500).json({ message: 'Erro ao deletar viagem' });
-  }
-};
+  }};
+
+
+

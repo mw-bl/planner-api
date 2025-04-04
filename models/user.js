@@ -36,8 +36,8 @@ export default (sequelize) => {
         allowNull: false,
       },
       role: {
-        type: DataTypes.STRING,
-        allowNull: false, // Certifique-se de que o papel é obrigatório
+        type: DataTypes.ENUM("organizador", "convidado"), // Alinha com os valores do banco de dados
+        allowNull: false, // Torna o campo obrigatório
       },
     },
     {
@@ -45,11 +45,13 @@ export default (sequelize) => {
       modelName: "User",
       hooks: {
         beforeCreate: async (user) => {
+          console.log("Senha antes de criptografar:", user.password);
           if (user.password) {
+            console.log("Criptografando senha para o usuário:", user.email);
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(user.password, salt);
           }
-        },
+        },        
       },
     }
   );

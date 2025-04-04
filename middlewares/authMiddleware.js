@@ -4,21 +4,22 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-    console.log('Token não fornecido');
-    return res.status(401).json({ message: 'Token não fornecido' });
-}
-
-jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-  if (err) {
-      console.log('Erro ao verificar token:', err);
-      return res.status(403).json({ message: 'Token inválido ou expirado' });
+    console.log("Token não fornecido");
+    return res.status(401).json({ message: "Token não fornecido" });
   }
-  console.log('Usuário autenticado no middleware:', user); 
-    req.user = user;
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      console.log("Erro ao verificar token:", err);
+      return res.status(403).json({ message: "Token inválido ou expirado" });
+    }
+
+    console.log("Payload do token JWT:", user); // Verifica o payload do token
+    req.user = user; // Atribui o payload ao req.user
     next();
   });
 };

@@ -10,29 +10,42 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    console.log("Tentativa de login com email:", email); // Log do email recebido
+    console.log("Senha recebida:", password); // Log da senha recebida
+
+    // Verifica se o usuário existe no banco de dados
     const user = await db.User.findOne({ where: { email } });
     if (!user) {
-      return res.status(404).json({ message: 'Usuário não encontrado' });
+      console.log("Usuário não encontrado para o email:", email); // Log se o usuário não for encontrado
+      return res.status(404).json({ message: "Usuário não encontrado" });
     }
 
+    console.log("Usuário encontrado:", user); // Log do usuário encontrado
+    console.log("Senha armazenada (hash):", user.password); // Log do hash armazenado
+
+    // Verifica a senha
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log("Senha válida:", isPasswordValid); // Log do resultado da comparação
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Senha inválida' });
+      return res.status(401).json({ message: "Senha inválida" });
     }
-
-    console.log('Papel do usuário no login:', user.role); // Verifique se o papel está correto
 
     // Gera o token JWT com o papel do usuário
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role }, // Inclua o papel do usuário
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role, // Inclui o papel do usuário no payload
+      },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: "1h" } // Define o tempo de expiração do token
     );
 
-    res.status(200).json({ message: 'Login bem-sucedido', token });
+    console.log("Login bem-sucedido para o email:", email); // Log de sucesso no login
+    res.status(200).json({ token });
   } catch (error) {
-    console.error('Erro ao fazer login:', error);
-    res.status(500).json({ message: 'Erro ao fazer login' });
+    console.error("Erro ao fazer login:", error); // Log de erro
+    res.status(500).json({ message: "Erro ao fazer login" });
   }
 };
 
@@ -40,22 +53,34 @@ export const signUp = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   try {
-   
+    console.log("Tentativa de cadastro com email:", email);
+    console.log("Dados recebidos para cadastro:", { name, email, role });
+
+    // Verifica se o email já está cadastrado
     const existingUser = await db.User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ message: 'Usuário já existe' });
+      console.log("Email já está em uso:", email);
+      return res.status(400).json({ message: "Email já está em uso" });
     }
 
-   
-    const newUser = await db.User.create({ name, email, password, role });
+    // Verifica se o campo role foi fornecido
+    if (!role || (role !== "organizador" && role !== "convidado")) {
+      console.log("Papel do usuário inválido ou não fornecido:", role);
+      return res.status(400).json({ message: "Papel do usuário (role) inválido ou não fornecido" });
+    }
 
-   
-    const user = newUser.get({ plain: true });
-    delete user.password;
+    // Cria o usuário no banco de dados (o hook `beforeCreate` cuidará da criptografia)
+    const newUser = await db.User.create({
+      name,
+      email,
+      password, // A senha será criptografada no hook
+      role,
+    });
 
-    res.status(201).json({ message: 'Usuário criado com sucesso', user });
+    console.log("Usuário criado com sucesso:", newUser);
+    res.status(201).json({ message: "Usuário criado com sucesso", user: newUser });
   } catch (error) {
-    console.error('Erro ao criar usuário:', error);
-    res.status(500).json({ message: 'Erro ao criar usuário' });
+    console.error("Erro ao criar usuário:", error);
+    res.status(500).json({ message: "Erro ao criar usuário" });
   }
 };

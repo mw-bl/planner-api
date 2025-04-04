@@ -1,27 +1,26 @@
 export default (sequelize, DataTypes) => {
-    const UserViagem = sequelize.define("UserViagem", {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
+  const UserViagem = sequelize.define("UserViagem", {
+    viagemId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Viagem",
+        key: "id",
       },
-      userId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: "Users", // Nome da tabela de usuários
-          key: "id",
-        },
-        allowNull: false,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "User",
+        key: "id",
       },
-      viagemId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: "Viagems", // Nome da tabela de viagens
-          key: "id",
-        },
-        allowNull: false,
-      },
-    });
-  
-    return UserViagem;
-  };
+    },
+    confirmada: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+  });
+
+  return UserViagem;
+};
