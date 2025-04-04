@@ -24,14 +24,25 @@ export const getAllViagens = async (req, res) => {
     let viagens;
 
     if (req.user.role === 'organizador') {
-      // Organizadores podem ver as viagens que organizaram
+      // Organizadores podem ver as viagens que organizaram e as que estão participando
       viagens = await db.Viagem.findAll({
-        where: { userId: req.user.id },
+        where: {
+          [db.Sequelize.Op.or]: [
+            { userId: req.user.id }, // Viagens organizadas pelo usuário
+          ],
+        },
         include: [
           {
             model: db.User,
+            as: 'organizador', // Alias definido no modelo
+            attributes: ['id', 'name', 'email'], // Campos do organizador que você deseja retornar
+          },
+          {
+            model: db.User,
             as: 'convidados', // Alias definido no modelo
-            attributes: ['id', 'name', 'email'], // Campos que você deseja incluir
+            where: { id: req.user.id }, // Viagens em que o organizador está participando
+            attributes: ['id', 'name', 'email'],
+            required: false, // Inclui mesmo que não haja convidados
           },
         ],
       });
@@ -39,6 +50,11 @@ export const getAllViagens = async (req, res) => {
       // Convidados só podem ver as viagens em que participam
       viagens = await db.Viagem.findAll({
         include: [
+          {
+            model: db.User,
+            as: 'organizador', // Alias definido no modelo
+            attributes: ['id', 'name', 'email'], // Campos do organizador que você deseja retornar
+          },
           {
             model: db.User,
             as: 'convidados', // Alias definido no modelo
