@@ -83,3 +83,39 @@ export const confirmarParticipacao = async (req, res) => {
     res.status(500).json({ message: 'Erro ao confirmar participação' });
   }
 };
+
+export const removerParticipante = async (req, res) => {
+  const { viagemId, userId } = req.params; // ID da viagem e do usuário a ser removido
+  const userIdLogado = req.user.id; // ID do organizador logado
+
+  try {
+    // Busca a viagem pelo ID
+    const viagem = await db.Viagem.findByPk(viagemId);
+
+    // Verifica se a viagem existe
+    if (!viagem) {
+      return res.status(404).json({ message: "Viagem não encontrada" });
+    }
+
+    // Verifica se a viagem pertence ao organizador logado
+    if (viagem.userId !== userIdLogado) {
+      return res.status(403).json({ message: "Você não tem permissão para remover participantes desta viagem." });
+    }
+
+    // Busca a associação do usuário com a viagem
+    const userViagem = await db.UserViagem.findOne({ where: { viagemId, userId } });
+
+    // Verifica se a associação existe
+    if (!userViagem) {
+      return res.status(404).json({ message: "Participação não encontrada" });
+    }
+
+    // Remove a associação
+    await userViagem.destroy();
+
+    res.status(200).json({ message: "Participante removido da viagem com sucesso." });
+  } catch (error) {
+    console.error("Erro ao remover participante da viagem:", error);
+    res.status(500).json({ message: "Erro ao remover participante da viagem." });
+  }
+};
