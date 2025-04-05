@@ -28,6 +28,10 @@ module.exports = {
         onUpdate: "CASCADE",
         allowNull: false,
       },
+      confirmada: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
