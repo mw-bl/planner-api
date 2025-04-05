@@ -65,22 +65,43 @@ export const confirmarParticipacao = async (req, res) => {
   const { viagemId } = req.params;
   const userId = req.user.id;
 
+  console.log("Confirmando participação para:");
+  console.log("Viagem ID:", viagemId);
+  console.log("Usuário ID:", userId);
+
   try {
+    // Atualiza a confirmação do participante
     const userViagem = await db.UserViagem.findOne({
       where: { viagemId, userId },
     });
 
+    console.log("Registro encontrado na tabela UserViagem:", userViagem);
+
     if (!userViagem) {
-      return res.status(404).json({ message: 'Participação não encontrada' });
+      return res.status(404).json({ message: "Participação não encontrada" });
     }
 
     userViagem.confirmada = true;
     await userViagem.save();
 
-    res.status(200).json({ message: 'Participação confirmada com sucesso' });
+    // Verifica se todos os participantes confirmaram
+    const participantes = await db.UserViagem.findAll({
+      where: { viagemId },
+    });
+
+    const todosConfirmados = participantes.every((p) => p.confirmada);
+
+    // Atualiza o campo `confirmada` na tabela `Viagem` se todos confirmaram
+    if (todosConfirmados) {
+      const viagem = await db.Viagem.findByPk(viagemId);
+      viagem.confirmada = true;
+      await viagem.save();
+    }
+
+    res.status(200).json({ message: "Participação confirmada com sucesso" });
   } catch (error) {
-    console.error('Erro ao confirmar participação:', error);
-    res.status(500).json({ message: 'Erro ao confirmar participação' });
+    console.error("Erro ao confirmar participação:", error);
+    res.status(500).json({ message: "Erro ao confirmar participação" });
   }
 };
 
