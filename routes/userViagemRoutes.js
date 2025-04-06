@@ -1,7 +1,7 @@
 import express from "express";
 import { associateUserToViagem } from "../controllers/userViagemController.js";
 import { findUserByEmail } from "../controllers/userViagemController.js";
-import {confirmarParticipacao} from "../controllers/userViagemController.js";// Importa o controlador para buscar usuários
+import {confirmarParticipacao} from "../controllers/userViagemController.js";
 import { authenticateToken, authorizeRole } from "../middlewares/authMiddleware.js";
 import { removerParticipante } from "../controllers/userViagemController.js";
 
