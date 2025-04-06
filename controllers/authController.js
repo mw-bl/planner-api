@@ -13,7 +13,7 @@ export const login = async (req, res) => {
     console.log("Tentativa de login com email:", email); 
     console.log("Senha recebida:", password); 
 
-    // Verifica se o usuário existe no banco de dados
+    
     const user = await db.User.findOne({ where: { email } });
     if (!user) {
       console.log("Usuário não encontrado para o email:", email);
@@ -22,7 +22,7 @@ export const login = async (req, res) => {
 
     console.log("Usuário encontrado:", user); 
     console.log("Senha armazenada (hash):", user.password); 
-    // Verifica a senha
+    
     const isPasswordValid = await bcrypt.compare(password, user.password);
     console.log("Senha válida:", isPasswordValid); 
     if (!isPasswordValid) {
@@ -72,7 +72,7 @@ export const signUp = async (req, res) => {
     const newUser = await db.User.create({
       name,
       email,
-      password, // A senha será criptografada no hook
+      password, 
       role,
     });
 
