@@ -6,7 +6,7 @@ import { Sequelize } from 'sequelize';
 import process from 'process';
 
 
-// Substitua __filename e __dirname
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -26,10 +26,8 @@ async function initializeDatabase() {
     sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);
   }
 
-  // Lê os arquivos do diretório de forma assíncrona
   const files = await fs.readdir(__dirname);
 
-  // Filtra e carrega os modelos
   for (const file of files) {
     if (
       file.indexOf('.') !== 0 &&
