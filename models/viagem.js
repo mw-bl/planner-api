@@ -46,13 +46,13 @@ export default (sequelize) => {
   Viagem.associate = (models) => {
     Viagem.belongsTo(models.User, {
       foreignKey: "userId",
-      as: "organizador", // Alias para o organizador da viagem
+      as: "organizador",
     });
     Viagem.belongsToMany(models.User, {
       through: "UserViagem",
       foreignKey: "viagemId",
       otherKey: "userId",
-      as: "convidados", // Alias para os participantes da viagem
+      as: "convidados",
     });
   };
 
