@@ -5,20 +5,17 @@ import { fileURLToPath } from 'url';
 import { Sequelize } from 'sequelize';
 import process from 'process';
 
-
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-import config from '../config/config.js'; // Importação do config
-
+import config from '../config/config.js';
 const db = {};
 
 async function initializeDatabase() {
   let sequelize;
-  const dbConfig = config[env]; // Acesse o ambiente correto do config
+  const dbConfig = config[env];
 
   if (dbConfig.use_env_variable) {
     sequelize = new Sequelize(process.env[dbConfig.use_env_variable], dbConfig);
@@ -42,7 +39,6 @@ async function initializeDatabase() {
     }
   }
 
-  // Configura as associações
   Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
       db[modelName].associate(db);
@@ -55,5 +51,4 @@ async function initializeDatabase() {
   return db;
 }
 
-// Exporta uma Promise que resolve para o objeto db
 export default await initializeDatabase();
