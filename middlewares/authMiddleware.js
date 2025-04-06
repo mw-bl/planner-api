@@ -18,8 +18,8 @@ export const authenticateToken = (req, res, next) => {
       return res.status(403).json({ message: "Token inválido ou expirado" });
     }
 
-    console.log("Payload do token JWT:", user); // Verifica o payload do token
-    req.user = user; // Atribui o payload ao req.user
+    console.log("Payload do token JWT:", user); 
+    req.user = user; 
     next();
   });
 };
