@@ -3,6 +3,8 @@ import db from "../models/index.js";
 export const createAtividade = async (req, res) => {
   const { dataAtividade, titulo, viagemId } = req.body;
 
+  console.log("Data recebida no backend:", dataAtividade); // Log para depuração
+
   try {
     const newAtividade = await db.Atividade.create({ dataAtividade, titulo, viagemId });
     res.status(201).json({ message: "Atividade criada com sucesso", atividade: newAtividade });

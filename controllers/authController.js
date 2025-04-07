@@ -40,7 +40,6 @@ export const login = async (req, res) => {
       { expiresIn: "1h" } 
     );
 
-<<<<<<< HEAD
     console.log("Login bem-sucedido para o email:", email); // Log de sucesso no login
     res.status(200).json({
       token,
@@ -52,10 +51,6 @@ export const login = async (req, res) => {
       },
     });
     
-=======
-    console.log("Login bem-sucedido para o email:", email); 
-    res.status(200).json({ token });
->>>>>>> 986c930a1d2f5e986a14f9d40e1701bcd5a3d137
   } catch (error) {
     console.error("Erro ao fazer login:", error); 
     res.status(500).json({ message: "Erro ao fazer login" });
