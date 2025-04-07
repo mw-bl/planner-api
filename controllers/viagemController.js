@@ -32,7 +32,6 @@ export const getAllViagens = async (req, res) => {
     let viagens;
 
     if (req.user.role === 'organizador') {
-      // Organizadores podem ver as viagens que organizaram
       viagens = await db.Viagem.findAll({
         where: { userId: req.user.id },
         include: [
