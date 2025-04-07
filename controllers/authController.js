@@ -42,7 +42,16 @@ export const login = async (req, res) => {
     );
 
     console.log("Login bem-sucedido para o email:", email); // Log de sucesso no login
-    res.status(200).json({ token });
+    res.status(200).json({
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role, // Agora você inclui o tipo de usuário
+      },
+    });
+    
   } catch (error) {
     console.error("Erro ao fazer login:", error); // Log de erro
     res.status(500).json({ message: "Erro ao fazer login" });

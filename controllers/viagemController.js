@@ -80,10 +80,28 @@ export const getAllViagens = async (req, res) => {
 
 export const getViagemById = async (req, res) => {
   const { id } = req.params;
-  
+
   try {
-    const viagem = await db.Viagem.findByPk(id, { include: [{ model: db.User, as: 'user' }] });
-    if (!viagem) return res.status(404).json({ message: 'Viagem não encontrada' });
+    const viagem = await db.Viagem.findByPk(id, {
+      include: [
+        {
+          model: db.User,
+          as: 'convidados', // Alias para os participantes
+          attributes: ['id', 'name', 'email'], // Retorna apenas os campos necessários
+          through: { attributes: ['confirmada'] }, // Inclui o status de confirmação
+        },
+        {
+          model: db.Atividade,
+          as: 'atividades', // Alias para as atividades
+          attributes: ['id', 'dataAtividade', 'titulo'],
+        },
+      ],
+    });
+
+    if (!viagem) {
+      return res.status(404).json({ message: 'Viagem não encontrada' });
+    }
+
     res.status(200).json({ message: 'Viagem recuperada com sucesso', viagem });
   } catch (error) {
     console.error('Erro ao buscar viagem por ID:', error);
@@ -93,13 +111,20 @@ export const getViagemById = async (req, res) => {
 
 export const updateViagem = async (req, res) => {
   const { id } = req.params;
-  const { dataCriacao, dataInicio, dataFinal, confirmada, userId } = req.body;
+  const { dataInicio, dataFinal, confirmada, pais, estado, cidade } = req.body;
 
   try {
     const viagem = await db.Viagem.findByPk(id);
     if (!viagem) return res.status(404).json({ message: 'Viagem não encontrada' });
-    
-    Object.assign(viagem, { dataCriacao, dataInicio, dataFinal, confirmada, userId });
+
+    // Atualiza apenas os campos permitidos
+    viagem.dataInicio = dataInicio || viagem.dataInicio;
+    viagem.dataFinal = dataFinal || viagem.dataFinal;
+    viagem.confirmada = confirmada !== undefined ? confirmada : viagem.confirmada;
+    viagem.pais = pais || viagem.pais;
+    viagem.estado = estado || viagem.estado;
+    viagem.cidade = cidade || viagem.cidade;
+
     await viagem.save();
 
     res.status(200).json({ message: 'Viagem atualizada com sucesso', viagem });

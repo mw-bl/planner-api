@@ -2,7 +2,7 @@ import db from "../models/index.js";
 
 export const associateUserToViagem = async (req, res) => {
   const { viagemId } = req.params; // ID da viagem
-  const { userId } = req.body; // ID do usuário a ser associado
+  const { email } = req.body; // E-mail do usuário a ser associado
   const userIdLogado = req.user.id; // ID do organizador logado
 
   try {
@@ -19,20 +19,20 @@ export const associateUserToViagem = async (req, res) => {
       return res.status(403).json({ message: "Você não tem permissão para adicionar participantes a esta viagem." });
     }
 
-    // Busca o usuário pelo ID
-    const user = await db.User.findByPk(userId);
+    // Busca o usuário pelo e-mail
+    const user = await db.User.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
 
     // Verifica se o usuário já está associado à viagem
-    const existingAssociation = await db.UserViagem.findOne({ where: { viagemId, userId } });
+    const existingAssociation = await db.UserViagem.findOne({ where: { viagemId, userId: user.id } });
     if (existingAssociation) {
       return res.status(400).json({ message: "Usuário já está associado a esta viagem." });
     }
 
     // Associa o usuário à viagem
-    await db.UserViagem.create({ viagemId, userId, confirmada: false });
+    await db.UserViagem.create({ viagemId, userId: user.id, confirmada: false });
     res.status(200).json({ message: "Usuário associado à viagem com sucesso." });
   } catch (error) {
     console.error("Erro ao associar usuário à viagem:", error);

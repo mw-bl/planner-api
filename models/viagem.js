@@ -54,7 +54,10 @@ export default (sequelize) => {
       otherKey: "userId",
       as: "convidados", // Alias para os participantes da viagem
     });
+    Viagem.hasMany(models.Atividade, { as: 'atividades', foreignKey: 'viagemId' });
   };
+
+  
 
   return Viagem;
 };
