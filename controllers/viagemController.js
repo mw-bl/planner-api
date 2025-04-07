@@ -50,7 +50,7 @@ export const getAllViagens = async (req, res) => {
         ],
       });
     } else if (req.user.role === 'convidado') {
-      // Convidados só podem ver as viagens em que participam
+  
       viagens = await db.Viagem.findAll({
         include: [
           {
