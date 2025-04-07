@@ -6,16 +6,16 @@ import { DataTypes } from "sequelize";
 export default (sequelize) => {
   class User extends Model {
     static associate(models) {
-      // Associações com aliases claros
+      
       User.hasMany(models.Viagem, {
         foreignKey: "userId",
-        as: "viagensOrganizadas", // Alias para viagens organizadas pelo usuário
+        as: "viagensOrganizadas",
       });
       User.belongsToMany(models.Viagem, {
-        through: "UserViagem", // Nome da tabela intermediária
+        through: "UserViagem",
         foreignKey: "userId",
         otherKey: "viagemId",
-        as: "viagensParticipadas", // Alias para viagens em que o usuário participa
+        as: "viagensParticipadas",
       });
     }
   }
@@ -36,8 +36,8 @@ export default (sequelize) => {
         allowNull: false,
       },
       role: {
-        type: DataTypes.ENUM("organizador", "convidado"), // Alinha com os valores do banco de dados
-        allowNull: false, // Torna o campo obrigatório
+        type: DataTypes.ENUM("organizador", "convidado"),
+        allowNull: false,
       },
     },
     {

@@ -1,4 +1,4 @@
-// app.js
+
 import express from 'express';
 import authRoutes from './routes/authRoutes.js';
 import viagemRoutes from './routes/viagemRoutes.js';
@@ -10,12 +10,11 @@ import cors from 'cors';
 
 const app = express();
 
-// Configurar CORS
 app.use(cors({
-    origin: "http://localhost:3000", // Permite apenas essa origem
+    origin: "http://localhost:3000", 
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true // Se estiver usando autenticação com cookies
+    credentials: true 
 }));
 
 app.use(express.json());
