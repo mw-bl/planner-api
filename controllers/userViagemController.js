@@ -25,13 +25,10 @@ export const associateUserToViagem = async (req, res) => {
       return res.status(403).json({ message: "Você não tem permissão para adicionar participantes a esta viagem." });
     }
 
-<<<<<<< HEAD
     // Busca o usuário pelo e-mail
     const user = await db.User.findOne({ where: { email } });
-=======
     
     const user = await db.User.findByPk(userId);
->>>>>>> 986c930a1d2f5e986a14f9d40e1701bcd5a3d137
     if (!user) {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
